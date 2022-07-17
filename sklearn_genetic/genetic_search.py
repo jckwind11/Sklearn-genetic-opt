@@ -1074,6 +1074,8 @@ class GAFeatureSelectionCV(BaseSearchCV):
         n_selected_features = np.sum(individual)
         
         if self.zero_inflated is not None:
+            print(self.X_)
+            print(self.zero_inflated)
             local_estimator.set_params(regressor__Z_data=self.X_[self.zero_inflated])
 
         # Compute the cv-metrics using only the selected features
