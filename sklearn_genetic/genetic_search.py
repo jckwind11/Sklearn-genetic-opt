@@ -1075,12 +1075,7 @@ class GAFeatureSelectionCV(BaseSearchCV):
         
         # fit_params = None
         if self.zero_inflated is not None:
-            # fit_params = {
-            #     'classifier__classifier__Z_data': self.zero_inflated, 
-            #     'regressor__regressor__personality': bool_individual 
-            #     }
             local_estimator.set_params(regressor__regressor__personality=bool_individual, classifier__classifier__Z_data=self.zero_inflated)
-            # local_estimator.set_params(classifier__classifier__Z_data=self.X_[:, self.zero_inflated])
 
         # Compute the cv-metrics using only the selected features
         cv_results = cross_validate(
