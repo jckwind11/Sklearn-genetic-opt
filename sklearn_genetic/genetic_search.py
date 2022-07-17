@@ -1081,10 +1081,10 @@ class GAFeatureSelectionCV(BaseSearchCV):
         # Compute the cv-metrics using only the selected features
         cv_results = cross_validate(
             local_estimator,
-            self.X_[:, bool_individual] if (self.zero_inflated is not None) else self.X_,
+            self.X_[:, bool_individual] if (self.zero_inflated is None) else self.X_,
             self.y_,
             cv=self.cv,
-            fit_params=None if (self.zero_inflated is not None) else fit_params,
+            fit_params=None if (self.zero_inflated is None) else fit_params,
             scoring=self.scoring,
             n_jobs=self.n_jobs,
             pre_dispatch=self.pre_dispatch,
