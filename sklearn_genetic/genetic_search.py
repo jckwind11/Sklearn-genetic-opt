@@ -231,6 +231,7 @@ class GASearchCV(BaseSearchCV):
         error_score=np.nan,
         return_train_score=False,
         log_config=None,
+        zero_inflated=None
     ):
 
         self.estimator = clone(estimator)
@@ -279,6 +280,7 @@ class GASearchCV(BaseSearchCV):
         self.metrics_list = None
         self.multimetric_ = False
         self.log_config = log_config
+        self.zero_inflated = zero_inflated
 
         # Check that the estimator is compatible with scikit-learn
         if not is_classifier(self.estimator) and not is_regressor(self.estimator):
@@ -422,6 +424,9 @@ class GASearchCV(BaseSearchCV):
 
         local_estimator = clone(self.estimator)
         local_estimator.set_params(**current_generation_params)
+        
+        if self.zero_inflated is not None:
+            local_estimator.set_params(regressor__Z_data=self.X_[:, self.zero_inflated])
 
         # Compute the cv-metrics
         cv_results = cross_validate(
