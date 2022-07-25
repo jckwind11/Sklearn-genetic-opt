@@ -913,7 +913,6 @@ class GAFeatureSelectionCV(BaseSearchCV):
         error_score=np.nan,
         return_train_score=False,
         log_config=None,
-        zero_inflated=None,
     ):
 
         self.estimator = clone(estimator)
@@ -962,7 +961,6 @@ class GAFeatureSelectionCV(BaseSearchCV):
         self.metrics_list = None
         self.multimetric_ = False
         self.log_config = log_config
-        self.zero_inflated = zero_inflated
 
         # Check that the estimator is compatible with scikit-learn
         if not is_classifier(self.estimator) and not is_regressor(self.estimator):
@@ -989,6 +987,7 @@ class GAFeatureSelectionCV(BaseSearchCV):
             verbose=verbose,
             pre_dispatch=pre_dispatch,
             error_score=error_score,
+            return_train_score=return_train_score
         )
 
     def _register(self):
@@ -1072,15 +1071,11 @@ class GAFeatureSelectionCV(BaseSearchCV):
 
         local_estimator = clone(self.estimator)
         n_selected_features = np.sum(individual)
-        
-        # fit_params = None
-        if self.zero_inflated is not None:
-            local_estimator.set_params(regressor__regressor__personality=bool_individual, classifier__classifier__Z_data=self.zero_inflated)
 
         # Compute the cv-metrics using only the selected features
         cv_results = cross_validate(
             local_estimator,
-            self.X_[:, bool_individual] if (self.zero_inflated is None) else self.X_,
+            self.X_[:, bool_individual],
             self.y_,
             cv=self.cv,
             # fit_params=fit_params,
